@@ -64,7 +64,7 @@ function _Shows(props:any) {
     })
   };
   const onRead = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}shows/byscreen/${params.id}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}shows/byscreen/${params.sid}`).then(res => {
       setData(res.data);
     })
   }
@@ -76,7 +76,8 @@ function _Shows(props:any) {
   }
   const setFormData = () => {
     let values = form.getFieldsValue(true);
-    values.screenId = params.id;
+    values.theaterId = params.id;
+    values.screenId = params.sid;
     return values;
   }
   return (

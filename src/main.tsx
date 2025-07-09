@@ -1,6 +1,6 @@
 // main.tsx or index.tsx
 import '@ant-design/v5-patch-for-react-19'; // 👈 Must come first
-import { unstableSetRender } from 'antd';
+import { ConfigProvider, unstableSetRender } from 'antd';
 import { createRoot } from 'react-dom/client';
 
 // 👇 Custom render patch for AntD compatibility
@@ -21,4 +21,14 @@ import App from './App';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
-root.render(<App />);
+root.render(
+<ConfigProvider
+    theme={{
+      token: {
+      
+        colorPrimary: '#f84464',
+        borderRadius: 4,
+     
+      },
+    }}
+  ><App /></ConfigProvider>);

@@ -37,7 +37,7 @@ function Movie() {
         <div className="container max-w-[1170px] mx-auto py-[30px]">
           <h2 className="text-2xl font-bold mb-[10px]">About the movie</h2>
           <p> {movie.description}</p>
-          {movie.cast?.length &&
+          {movie.cast?.length > 0 &&
             <>
               <div className="mb-[20px]"></div>
 
@@ -57,7 +57,7 @@ function Movie() {
 
             </>
           }
-          {movie.crew?.length &&
+          {movie.crew?.length > 0 &&
             <>
               <div className="mb-[20px]"></div>
 

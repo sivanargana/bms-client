@@ -10,7 +10,7 @@ function Shows() {
 
   useEffect(() => {
 
-    axios.get(`${import.meta.env.VITE_API_URL}shows/bymovie/${params.id}`).then(res => {
+   axios.get(`${import.meta.env.VITE_API_URL}shows/bymovie/${params.id}`).then(res => {
       setShows(res.data)
     })
 
@@ -19,7 +19,8 @@ function Shows() {
   return (
 
     <>
-   {
+ <div className="container">
+    {
     shows.length && shows.map((theater:any,i:any)=>
     <div key={i}>
       <div>{theater.name} --  {theater.city}</div>
@@ -32,6 +33,7 @@ function Shows() {
     </div>
     )
    }
+ </div>
     </>
 
   )
