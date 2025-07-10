@@ -7,10 +7,12 @@ import Theaters from "./features/admin/Theaters"
 import Cast from "./features/admin/Cast"
 import Crew from "./features/admin/Crew"
 import Screens from "./features/admin/Screens"
-import Seats from "./features/admin/Seats"
 import Movie from "./features/client/Movie"
 import Shows from "./features/client/Shows"
 import _Shows from "./features/admin/Shows"
+import Notfound from "./Notfound"
+import Seats from "./features/admin/Seats"
+import Banners from "./features/admin/Banners"
 
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
                <Route path="movie/:id/shows" element={<Shows />} /> 
           </Route>
           <Route path="admin" element={<PrivateLayout />}>
+          <Route path="banners" element={<Banners />} /> 
           <Route path="movies" element={<Movies />} /> 
           <Route path="movies/:id/cast" element={<Cast />} /> 
           <Route path="movies/:id/crew" element={<Crew />} /> 
@@ -33,6 +36,7 @@ function App() {
           <Route path="theaters/:id/screens/:sid/seats" element={<Seats />} /> 
           <Route path="theaters/:id/screens/:sid/shows" element={<_Shows />} /> 
           </Route>
+                <Route path="*" element={<Notfound />}></Route>
         </Routes>
       </BrowserRouter>
    

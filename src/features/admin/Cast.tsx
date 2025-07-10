@@ -1,78 +1,45 @@
-import { DeleteOutlined, EditOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Col, Drawer, Form, Input, Popconfirm, Row, Space, Table, Upload } from "antd"
- 
+import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Table, Upload } from "antd"
+import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router";
-function Cast(props:any) {
+function Cast(props: any) {
+  const [modal, contextHolder] = useModal();
   const params = useParams()
   const [data, setData] = useState<any>([]);
   const [item, setItem] = useState<any>({});
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
- 
-  const columns = [
-    {
-      title: 'Image',
-      dataIndex: 'img',
-      width: 120,
-      render: (_: any, row: any) => <img className="size-[50px]" src={`http://localhost:2000/uploads/${row.img}`} />
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Role',
-      dataIndex: 'role',
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'actions',
-       width: 150,
-      render: (_: any, row: any) => <>
-        <Space>
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this?"
-            onConfirm={() => onDelete(row)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button shape="circle" icon={<DeleteOutlined />} />
-          </Popconfirm>
-          <Button shape="circle" icon={<EditOutlined />} onClick={() => { setOpen(true); setItem(row); setIsEdit(true) }} />
-        </Space>
-      </>
-    },
-  ];
   useEffect(() => {
     onRead()
   }, [])
-  const onCreate = () => {
-
-    axios.post("http://localhost:2000/api/cast", setFormData()).then(res => {
-      form.resetFields()
-      onRead();
-      setOpen(false);
-    })
+  const onCreate = async () => {
+    try {
+      await form.validateFields();
+      axios.post(`${import.meta.env.VITE_API_URL}cast`, setFormData()).then(res => {
+        form.resetFields()
+        onRead();
+        setOpen(false);
+      })
+    } catch (errorInfo) {
+      console.log('❌ Validation Failed:', errorInfo);
+    }
   };
   const onUpdate = () => {
-
-    axios.put(`http://localhost:2000/api/cast/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}cast/${item.id}`, setFormData()).then(res => {
       form.resetFields()
       setOpen(false);
       onRead();
     })
   };
   const onRead = () => {
-    axios.get(`http://localhost:2000/api/cast/bymovie/${params.id}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}cast/bymovie/${params.id}`).then(res => {
       setData(res.data);
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`http://localhost:2000/api/cast/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}cast/${row.id}`).then(res => {
       setOpen(false);
       onRead();
     })
@@ -82,23 +49,74 @@ function Cast(props:any) {
     let formData: any = new FormData();
     formData.append('name', values.name);
     formData.append('role', values.role);
-    formData.append('movieId',params.id);
-    formData.append('img', values.img && values.img[0].originFileObj); 
-
+    formData.append('movieId', params.id);
+    formData.append('img', values.img && values.img[0].originFileObj);
     return formData;
   }
   return (
     <>
-      <div className="flex items-center px-[20px] py-[10px] bg-white shadow relative z-[4]">
-        <div className="text-lg font-bold flex-auto">Cast</div>
-        <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
-      </div>
-      <Table rowKey="id" bordered dataSource={data} columns={columns} />
+      {contextHolder}
+       <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
+        <div className="text-lg font-bold">Cast</div>
+        <Breadcrumb>
+          <Breadcrumb.Item>Admin</Breadcrumb.Item>
+          <Breadcrumb.Item>Movies</Breadcrumb.Item>
+          <Breadcrumb.Item>Cast</Breadcrumb.Item>
+        </Breadcrumb>
+        <div className="ml-auto">
+          <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
+        </div>
+      </div> 
+      <Table rowKey="id" dataSource={data} columns={[
+        {
+          title: 'Image',
+          dataIndex: 'img',
+          width: 120,
+          render: (_: any, row: any) => <img className="size-[50px] rounded-full object-cover" src={`${import.meta.env.VITE_ASSETS_URL}${row.img}`} />
+        },
+        {
+          title: 'Info',
+          render: (_: any, row: any) => <>
+            <div className="text-lg font-bold mb-[0px]">{row.name}</div>
+            <div className="text-current/70">{row.role}</div>
+          </>
+        },
+        {
+          title: 'Actions',
+          dataIndex: 'actions',
+          width: 150,
+          render: (_: any, row: any) => <>
+            <Dropdown menu={{
+              items: [
+                { key: '1', label: "Update" },
+                { key: '2', label: "Delete" },
+              ], onClick: ({ key }) => {
+                switch (key) {
+                  case "1":
+                    setOpen(true); setItem(row); setIsEdit(true);
+                    break;
+                  case "2":
+                    modal.confirm({
+                      title: 'Delete the task',
+                      icon: <i className="fi fi-exclamation"></i>,
+                      content: 'Are you sure to delete this?',
+                      onOk() {
+                        onDelete(row)
+                      }
+                    });
+                    break;
+                }
+              }
+            }} placement="bottomRight" trigger={['click']}>
+              <Button>Actions <i className="fi fi-rr-angle-small-down"></i></Button>
+            </Dropdown>
+          </>
+        },
+      ]} />
       <Drawer
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
-        width={600}
         afterOpenChange={(val) => {
           let { img, ...rest } = item;
           if (isEdit) {
@@ -106,26 +124,23 @@ function Cast(props:any) {
           } else {
             form.resetFields()
           }
-
         }}
         footer={<>{isEdit ? <Button type="primary" onClick={onUpdate}>Update</Button> : <Button type="primary" onClick={onCreate}>Create</Button>}</>}
       >
-        <Form layout="vertical" form={form} >
+        <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item label="Name" name="name" >
+              <Form.Item label="Name" name="name" rules={[{ required: true }]} >
                 <Input />
               </Form.Item></Col>
             <Col span={24}>
-              <Form.Item label="Role" name="role" >
+              <Form.Item label="Role" name="role" rules={[{ required: true }]} >
                 <Input />
               </Form.Item></Col>
-           
-        
             <Col span={24}>
-              <Form.Item label="Image" name="img" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
+              <Form.Item label="Image" name="img" rules={[{ required: true }]} valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
                 <Upload showUploadList={false} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Upload</Button>
+                  <Button icon={<i className="fi fi-rr-upload"></i>}>Upload</Button>
                 </Upload>
               </Form.Item></Col>
           </Row>

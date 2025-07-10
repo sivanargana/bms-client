@@ -1,71 +1,47 @@
-import { BorderInnerOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Col, Drawer, Form, Input, Popconfirm, Row, Space, Table } from "antd"
- 
+import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Table } from "antd"
+import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { NavLink, useParams } from "react-router";
-function Screens(props:any) {
+import { useNavigate, useParams } from "react-router";
+function Screens(props: any) {
+  const [modal, contextHolder] = useModal();
+  const navigate = useNavigate();
   const params = useParams();
   const [data, setData] = useState<any>([]);
   const [item, setItem] = useState<any>({});
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
- 
-  const columns = [
-  
-    {
-      title: 'Number',
-      dataIndex: 'number',
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'actions',
-       width: 150,
-      render: (_: any, row: any) => <>
-        <Space>
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this?"
-            onConfirm={() => onDelete(row)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button shape="circle" icon={<DeleteOutlined />} />
-          </Popconfirm>
-          <Button shape="circle" icon={<EditOutlined />} onClick={() => { setOpen(true); setItem(row); setIsEdit(true) }} />
-            <NavLink to={`${row.id}/seats`}><Button shape="circle" icon={<BorderInnerOutlined />} /></NavLink>
-            <NavLink to={`${row.id}/shows`}><Button shape="circle" icon={<BorderInnerOutlined />} /></NavLink>
-        </Space>
-      </>
-    },
-  ];
   useEffect(() => {
     onRead()
   }, [])
-  const onCreate = () => {
-
-    axios.post("http://localhost:2000/api/screens", setFormData()).then(res => {
+  const onCreate = async () => {
+      try {
+      await form.validateFields();
+      axios.post(`${import.meta.env.VITE_API_URL}screens`, setFormData()).then(res => {
       form.resetFields()
       onRead();
       setOpen(false);
     })
+    } catch (errorInfo) {
+      console.log('❌ Validation Failed:', errorInfo);
+    }
+ 
   };
   const onUpdate = () => {
-
-    axios.put(`http://localhost:2000/api/screens/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}screens/${item.id}`, setFormData()).then(res => {
       form.resetFields()
       setOpen(false);
       onRead();
     })
   };
   const onRead = () => {
-    axios.get(`http://localhost:2000/api/screens/bytheater/${params.id}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}screens/bytheater/${params.id}`).then(res => {
       setData(res.data);
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`http://localhost:2000/api/screens/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}screens/${row.id}`).then(res => {
       setOpen(false);
       onRead();
     })
@@ -77,16 +53,68 @@ function Screens(props:any) {
   }
   return (
     <>
-      <div className="flex items-center px-[20px] py-[10px] bg-white shadow relative z-[4]">
-        <div className="text-lg font-bold flex-auto">Screens</div>
-        <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
-      </div>
-      <Table rowKey="id" bordered dataSource={data} columns={columns} />
+      {contextHolder}
+      <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
+        <div className="text-lg font-bold">Screens</div>
+        <Breadcrumb>
+          <Breadcrumb.Item>Admin</Breadcrumb.Item>
+          <Breadcrumb.Item>Theatres</Breadcrumb.Item>
+          <Breadcrumb.Item>Screens</Breadcrumb.Item>
+        </Breadcrumb>
+        <div className="ml-auto">
+          <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
+        </div>
+      </div> 
+      <Table rowKey="id" dataSource={data} columns={[
+    {
+      title: 'Info',
+      dataIndex: 'number',
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'actions',
+      width: 150,
+      render: (_: any, row: any) => <>
+        <Dropdown menu={{
+          items: [
+            { key: '1', label: "Update" },
+            { key: '2', label: "Delete" },
+            { key: '3', label: "Manage Shows" },
+            { key: '4', label: "Manage Seats" }
+          ], onClick: ({ key }) => {
+            switch (key) {
+              case "1":
+                setOpen(true); setItem(row); setIsEdit(true);
+                break;
+              case "2":
+                modal.confirm({
+                  title: 'Delete the task',
+                  icon: <i className="fi fi-exclamation"></i>,
+                  content: 'Are you sure to delete this?',
+                  onOk() {
+                    onDelete(row)
+                  }
+                });
+                break;
+              case "3":
+                navigate(`${row.id}/shows`)
+                break;
+              case "4":
+                navigate(`${row.id}/seats`)
+                break;
+            }
+            
+          }
+        }} placement="bottomRight" trigger={['click']}>
+          <Button>Actions <i className="fi fi-rr-angle-small-down"></i></Button>
+        </Dropdown>
+      </> 
+    },
+  ]} />
       <Drawer
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
-        open={open}
-        width={600}
+        open={open} 
         afterOpenChange={(val) => {
           let { img, ...rest } = item;
           if (isEdit) {
@@ -94,19 +122,15 @@ function Screens(props:any) {
           } else {
             form.resetFields()
           }
-
         }}
         footer={<>{isEdit ? <Button type="primary" onClick={onUpdate}>Update</Button> : <Button type="primary" onClick={onCreate}>Create</Button>}</>}
       >
-        <Form layout="vertical" form={form} >
+        <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item label="Number" name="number" >
+              <Form.Item label="Number" name="number" rules={[{required:true}]} >
                 <Input />
               </Form.Item></Col>
-       
-           
-        
           </Row>
         </Form>
       </Drawer>

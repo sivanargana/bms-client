@@ -1,73 +1,45 @@
-import { DeleteOutlined, EditOutlined, FundProjectionScreenOutlined } from "@ant-design/icons";
-import { Button, Col, Drawer, Form, Input, Popconfirm, Row, Space, Table } from "antd"
- 
+import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Table } from "antd"
+import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { NavLink } from "react-router";
-function Theaters(props:any) {
+import { useNavigate } from "react-router";
+function Theaters(props: any) {
+  const navigate = useNavigate();
+  const [modal, contextHolder] = useModal();
   const [data, setData] = useState<any>([]);
   const [item, setItem] = useState<any>({});
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
- 
-  const columns = [
-  
-    {
-      title: 'Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'City',
-      dataIndex: 'city',
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'actions',
-       width: 150,
-      render: (_: any, row: any) => <>
-        <Space>
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this?"
-            onConfirm={() => onDelete(row)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button shape="circle" icon={<DeleteOutlined />} />
-          </Popconfirm>
-          <Button shape="circle" icon={<EditOutlined />} onClick={() => { setOpen(true); setItem(row); setIsEdit(true) }} />
-                <NavLink to={`${row.id}/screens`}><Button shape="circle" icon={<FundProjectionScreenOutlined />} /></NavLink>
-        </Space>
-      </>
-    },
-  ];
   useEffect(() => {
     onRead()
   }, [])
-  const onCreate = () => {
-
-    axios.post("http://localhost:2000/api/theaters", setFormData()).then(res => {
-      form.resetFields()
-      onRead();
-      setOpen(false);
-    })
+  const onCreate = async () => {
+    try {
+      await form.validateFields();
+      axios.post(`${import.meta.env.VITE_API_URL}theaters`, setFormData()).then(res => {
+        form.resetFields()
+        onRead();
+        setOpen(false);
+      })
+    } catch (errorInfo) {
+      console.log('❌ Validation Failed:', errorInfo);
+    }
   };
   const onUpdate = () => {
-
-    axios.put(`http://localhost:2000/api/theaters/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}theaters/${item.id}`, setFormData()).then(res => {
       form.resetFields()
       setOpen(false);
       onRead();
     })
   };
   const onRead = () => {
-    axios.get(`http://localhost:2000/api/theaters`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}theaters`).then(res => {
       setData(res.data);
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`http://localhost:2000/api/theaters/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}theaters/${row.id}`).then(res => {
       setOpen(false);
       onRead();
     })
@@ -78,16 +50,65 @@ function Theaters(props:any) {
   }
   return (
     <>
-      <div className="flex items-center px-[20px] py-[10px] bg-white shadow relative z-[4]">
-        <div className="text-lg font-bold flex-auto">Theatres</div>
-        <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
+      {contextHolder}
+       <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
+        <div className="text-lg font-bold">Theatres</div>
+        <Breadcrumb>
+          <Breadcrumb.Item>Admin</Breadcrumb.Item>
+          <Breadcrumb.Item>Theatres</Breadcrumb.Item>
+        </Breadcrumb>
+        <div className="ml-auto">
+          <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
+        </div>
       </div>
-      <Table rowKey="id" bordered dataSource={data} columns={columns} />
+      <Table rowKey="id" dataSource={data} columns={[
+        {
+          title: 'Info',
+          render: (_: any, row: any) => <>
+            <div className="text-lg font-bold mb-[0px]">{row.name}</div>
+            <div className="text-current/70">{row.city}</div>
+          </>
+        },
+        {
+          title: 'Actions',
+          dataIndex: 'actions',
+          width: 150,
+          render: (_: any, row: any) => <>
+            <Dropdown menu={{
+              items: [
+                { key: '1', label: "Update" },
+                { key: '2', label: "Delete" },
+                { key: '3', label: "Manage Screens" }
+              ], onClick: ({ key }) => {
+                switch (key) {
+                  case "1":
+                    setOpen(true); setItem(row); setIsEdit(true);
+                    break;
+                  case "2":
+                    modal.confirm({
+                      title: 'Delete the task',
+                      icon: <i className="fi fi-exclamation"></i>,
+                      content: 'Are you sure to delete this?',
+                      onOk() {
+                        onDelete(row)
+                      }
+                    });
+                    break;
+                  case "3":
+                    navigate(`${row.id}/screens`)
+                    break;
+                } 
+              }
+            }} placement="bottomRight" trigger={['click']}>
+              <Button>Actions <i className="fi fi-rr-angle-small-down"></i></Button>
+            </Dropdown>
+          </>
+        },
+      ]} />
       <Drawer
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
-        width={600}
         afterOpenChange={(val) => {
           let { img, ...rest } = item;
           if (isEdit) {
@@ -95,23 +116,20 @@ function Theaters(props:any) {
           } else {
             form.resetFields()
           }
-
         }}
         footer={<>{isEdit ? <Button type="primary" onClick={onUpdate}>Update</Button> : <Button type="primary" onClick={onCreate}>Create</Button>}</>}
       >
-        <Form layout="vertical" form={form} >
+        <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item label="Name" name="name" >
+              <Form.Item label="Name" name="name" rules={[{ required: true }]} >
                 <Input />
               </Form.Item></Col>
             <Col span={24}>
-              <Form.Item label="City" name="city" >
+              <Form.Item label="City" name="city" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
-              </Col>
-           
-        
+            </Col>
           </Row>
         </Form>
       </Drawer>
