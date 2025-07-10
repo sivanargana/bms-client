@@ -25,7 +25,7 @@ function Home() {
       <Swiper
       modules={[Autoplay]}
       autoplay={{delay:2000}}
-      spaceBetween={10}
+      spaceBetween={10} 
       slidesPerView={"auto"}
       centeredSlides={true} 
       initialSlide={1} 
@@ -35,6 +35,10 @@ function Home() {
  
  
     >
+      <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1744877848242_revplaycard1240x300.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
+      <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1751871230107_karatekiddesktop.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
+    
+   
       <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1744877848242_revplaycard1240x300.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
       <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1751871230107_karatekiddesktop.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
     
