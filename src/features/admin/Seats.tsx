@@ -1,5 +1,6 @@
 import { Breadcrumb, Button } from "antd"
 import SeatsLayout from "./SeatsLayout"
+import SeatsLayoutBuilder from "./SeatsLayoutBuilder"
 
 function Seats(props: any) {
 
@@ -17,7 +18,7 @@ function Seats(props: any) {
           <Button type="primary">Add New</Button>
         </div>
       </div> 
-      <SeatsLayout />
+      <SeatsLayoutBuilder />
     </>
   )
 }
