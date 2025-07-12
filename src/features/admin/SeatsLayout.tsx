@@ -2454,6 +2454,10 @@ function SeatsLayout(props: any) {
       console.log(res)
     })
   }
+
+
+
+
   return (
     <div className="p-[25px] flex flex-col gap-[10px]">
       <div className="flex flex-col gap-[10px]">

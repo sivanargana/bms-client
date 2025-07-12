@@ -1,5 +1,6 @@
 import   { BrowserRouter, Routes, Route } from "react-router"
 import Home from "./features/client/Home"
+import _Seats from "./features/client/Seats"
 import PublicLayout from "./layouts/PublicLayout"
 import Movies from "./features/admin/Movies"
 import PrivateLayout from "./layouts/PrivateLayout"
@@ -25,6 +26,7 @@ function App() {
             <Route index element={<Home />} /> 
                <Route path="movie/:id" element={<Movie />} /> 
                <Route path="movie/:id/shows" element={<Shows />} /> 
+               <Route path="movie/:id/shows/:sid" element={<_Seats />} /> 
           </Route>
           <Route path="admin" element={<PrivateLayout />}>
           <Route path="banners" element={<Banners />} /> 

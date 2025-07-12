@@ -1,59 +1,128 @@
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import _ from 'lodash';
-import { Button } from "antd";
+import { Button, Input, Popover, Select } from "antd";
+import React, { useEffect } from "react";
 
 
-function SeatsLayoutBuilder() {
+function SeatsLayoutBuilder({seats = [],onSave,onUpdate}:any) {
 
-  const getGrid = () => {
-    let rows = 30;
-    let columns = 30;
-    let grid = [];
-    for (let row = 1; row <= rows; row++) {
-      for (let column = 1; column <= columns; column++) {
-        grid.push({ column, row, number: 0, type: 'blank', price: 0 });
-      }
+const getGrid = () => {
+  const rows = 26; // A to Z
+  const columns = 40;
+  const grid = [];
+
+  for (let row = 0; row < rows; row++) {
+    const rowLabel = String.fromCharCode(65 + row); // 'A' = 65
+    for (let column = 1; column <= columns; column++) {
+      grid.push({
+        row: rowLabel,
+        column,
+        number: 0,
+        type: 'blank',
+        price: 0,
+      });
     }
-    return grid;
-  }
- 
-
-  const groupedByRow:any = Object.values(_.groupBy(getGrid(),'row'));
-
- 
-
-
-
-  const { control, register, getValues } = useForm({ defaultValues: { rows: getGrid() } })
-  const { fields: rows, append: addRow, remove: removeRow } = useFieldArray({ control, name: "rows" });
-
-  const handleChange = (column: any) => {
-    console.log(column)
-
   }
 
+  return grid;
+};
+
+
+
+
+
+
+  const { control, getValues,watch,setValue } = useForm({ defaultValues: { rows: getGrid() } })
+  const { fields: rows} = useFieldArray({ control, name: "rows" });
+  useEffect(() => {
+
+    seats.forEach((item:any,) => {
+      let match = rows.findIndex((s:any)=>(s.column == item.column && s.row == item.row))
+  
+        console.log(match)
+
+         setValue(`rows.${match}.number`,item.number)
+         setValue(`rows.${match}.type`,item.type)
+
+     
+      
+    });
+
+    
+    
+  }, []);
+  
  
+  const handlePrint = () => {
+    let filled:any  = getValues().rows.filter((item:any)=>item.type !== 'blank')
+    onSave(filled)
+     
+
+  }
+ 
+  const handlePrint2 = () => {
+    let filled:any  = getValues().rows.filter((item:any)=>item.type !== 'blank')
+    onUpdate(filled)
+     
+
+  }
+
+  
+
+
 
   return (
-    <div className="flex flex-col gap-[10px] p-[20px]">
-        <Button size="small" onClick={() => { console.log(getValues()) }}>Print</Button>
-    {
-      groupedByRow.map((row:any,i1:any)=>
-      <div key={i1} className="flex gap-[10px]">
-      {
-          row.map((column:any,i2:any)=>
-         <label key={i2} className="size-[30px] border flex items-center justify-center text-xs [&:has(input:checked)]:bg-green-100">
-          <input type="checkbox" className="hidden" onChange={()=>handleChange(column)}  />
-          {column.column}
-        </label>
-      )
-      }
+    <>
+     {seats.length > 0 ? <Button size="small" onClick={() => handlePrint2()}>Update</Button> : <Button size="small" onClick={() => handlePrint()}>Add</Button> }
+      <div className="flex flex-wrap p-[20px]">
+
+        {
+          rows.map((column: any, i: any) =>
+          {
+              let type = watch(`rows.${i}.type`);
+          let number = watch(`rows.${i}.number`);
+            return <React.Fragment key={i}>
+              <Popover title="Seat Info" trigger="click" content={
+                <div className="grid grid-cols-1 gap-[10px]">
+                  
+                  {type === "basic" && <Controller
+                    name={`rows.${i}.number`}
+                    control={control}
+                    render={({ field }) => <Input placeholder="Number" {...field} />}
+                  />}
+                  <Controller
+                    name={`rows.${i}.type`}
+                    control={control}
+                    render={({ field }) => <Select placeholder="Type" {...field} >
+                      <Select.Option value="basic">Basic</Select.Option>
+                      <Select.Option value="space">Space</Select.Option>
+                      <Select.Option value="blank">Blank</Select.Option>
+                    </Select>}
+                  />
+                </div>
+              }>
+                  {(() => {
+                switch (type) {
+                  case "blank":
+                    return <div className="size-[30px] rounded flex items-center justify-center border border-gray-200 hover:border-blue-500"></div>;
+                  case "space":
+                    return <div className="size-[30px] rounded flex items-center justify-center border border-transparent hover:border-blue-500"></div>;
+                  case "basic":
+                    return <div className="size-[30px] rounded flex items-center justify-center border border-gray-300 text-xs bg-gray-200">{column.row+''+column.column}</div>;
+               
+                }
+              })()}
+              </Popover>
+              {column.column % 40 !== 0 && <div className="w-[5px]"></div>}
+              {column.column % 40 === 0 && <div className="h-[5px] w-full"></div>}
+            </React.Fragment>
+          }
+          )
+        }
+
       </div>
-      )
-      }
-    
-    </div>
- 
+    </>
+
   )
 }
 
