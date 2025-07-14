@@ -1,9 +1,10 @@
-import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Select, Table } from "antd"
+import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Select, Switch, Table } from "antd"
 import axios from "axios"
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import useModal from "antd/es/modal/useModal";
 import { useWatch } from "antd/es/form/Form";
+import _ from "lodash";
 
 function Seats(props: any) {
   const [modal, contextHolder] = useModal();
@@ -11,13 +12,29 @@ function Seats(props: any) {
   const [data, setData] = useState<any>([]);
   const [item, setItem] = useState<any>({});
   const [open, setOpen] = useState(false);
+  const [openBulk, setOpenBulk] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
    const typeValue = useWatch('type', form);
   useEffect(() => {
     onRead();
 
   }, [])
+  const onBulk = async () => {
+       let values = form2.getFieldsValue(true);
+    values.screenId = params.sid;
+    try {
+      await form2.validateFields();
+      axios.post(`${import.meta.env.VITE_API_URL}seats/bulk`, values).then(res => {
+        form2.resetFields()
+        onRead();
+        setOpenBulk(false);
+      })
+    } catch (errorInfo) {
+      console.log('❌ Validation Failed:', errorInfo);
+    }
+  };
   const onCreate = async () => {
     try {
       await form.validateFields();
@@ -39,7 +56,12 @@ function Seats(props: any) {
   };
   const onRead = () => {
     axios.get(`${import.meta.env.VITE_API_URL}seats/byscreen/${params.sid}`).then(res => {
-      setData(res.data);
+
+      const groupedByRowArray = Object.entries(_.groupBy(res.data, 'row')).map(
+  ([row, columns]) => ({ row, columns })
+);
+      setData(groupedByRowArray);
+      console.log(groupedByRowArray)
     })
   }
   const onDelete = (row: any) => {
@@ -65,25 +87,24 @@ function Seats(props: any) {
           <Breadcrumb.Item>Screens</Breadcrumb.Item>
           <Breadcrumb.Item>Seats</Breadcrumb.Item>
         </Breadcrumb>
-        <div className="ml-auto">
-          <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
+        <div className="ml-auto flex gap-[10px]">
+          <Button type="primary" onClick={() => setOpenBulk(true)}>Create Bulk</Button>
+          <Button type="primary" onClick={() => setOpen(true)} ghost>Add New</Button>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-[10px] p-[20px]">
+      <div className="flex flex-col gap-[10px] p-[20px]"> 
+        { data.map((row: any, i: any) =><div className="flex gap-[10px]" key={i}>
+          <div className="size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500">{row.row}</div>
         {
-          data.map((row: any, i: any) =>
-             
-
-
-              <Dropdown key={i} menu={{
+          row.columns.map((column: any, i: any) => <Dropdown key={i} menu={{
                 items: [
                   { key: '1', label: "Update" },
                   { key: '2', label: "Delete" },
                 ], onClick: ({ key }) => {
                   switch (key) {
                     case "1":
-                      setOpen(true); setItem(row); setIsEdit(true);
+                      setOpen(true); setItem(column); setIsEdit(true);
                       break;
                     case "2":
                       modal.confirm({
@@ -91,26 +112,26 @@ function Seats(props: any) {
                         icon: <i className="fi fi-exclamation"></i>,
                         content: 'Are you sure to delete this?',
                         onOk() {
-                          onDelete(row)
+                          onDelete(column)
                         }
                       });
                       break;
                   }
                 }
               }} placement="bottomRight" trigger={['click']} className={`
-              ${row.type == 'basic' ? 'size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500' : ''}
-              ${row.type == 'blank' ? 'size-[30px] text-xs border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
-              ${row.type == 'break' ? 'w-full h-[10px] bg-gray-100 border border-transparent hover:border-blue-500' : ''}
+              ${column.type == 'basic' ? 'size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500' : ''}
+              ${column.type == 'blank' ? 'size-[30px] text-xs border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
+              ${column.type == 'break' ? 'w-full h-[10px] bg-gray-100 border border-transparent hover:border-blue-500' : ''}
               `}>
                 <div className="flex flex-col">
-                  <div>{row.number}</div>
-                  <div className="text-xs text-gray-400 -mt-[5px]">{row.column}</div>
+                  <div>{column.number}</div>
+                  <div className="text-xs text-gray-400 -mt-[5px]">{column.column}</div>
                 </div>
-              </Dropdown>
-          
-          )
+              </Dropdown>)
         }
+        </div>)}
       </div>
+
 
 
 
@@ -168,6 +189,44 @@ function Seats(props: any) {
             </>}
 
           </Row>
+        </Form>
+      </Drawer>
+      <Drawer
+        title="Create Bulk"
+        onClose={() => { setOpenBulk(false); }}
+        open={openBulk}
+        footer={<Button type="primary" onClick={onBulk}>Create</Button>}
+      >
+        <Form layout="vertical" form={form2} requiredMark={false} >
+          <Row gutter={16}>
+              <Col span={8} >
+              <Form.Item label="Start" name="start" initialValue="A" rules={[{ required: true }]} >
+                <Input />
+              </Form.Item>
+              </Col>
+              <Col span={8} >
+              <Form.Item label="End" name="end" initialValue="Z" rules={[{ required: true }]} >
+                <Input />
+              </Form.Item>
+              </Col>
+              <Col span={8} >
+              <Form.Item label="Range" name="range" initialValue="20" rules={[{ required: true }]} >
+                <Input />
+              </Form.Item>
+              </Col>
+
+                  <Col span={12} >
+              <Form.Item label="Column Reverse" name="columnReverse" initialValue={false} rules={[{ required: true }]} >
+                <Switch />
+              </Form.Item>
+              </Col>
+
+                  <Col span={12} >
+              <Form.Item label="Row Reverse" name="rowReverse" initialValue={false} rules={[{ required: true }]} >
+                <Switch />
+              </Form.Item>
+              </Col>
+               </Row>
         </Form>
       </Drawer>
     </>
