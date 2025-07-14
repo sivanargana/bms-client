@@ -57,9 +57,21 @@ function Seats(props: any) {
   const onRead = () => {
     axios.get(`${import.meta.env.VITE_API_URL}seats/byscreen/${params.sid}`).then(res => {
 
-      const groupedByRowArray = Object.entries(_.groupBy(res.data, 'row')).map(
-  ([row, columns]) => ({ row, columns })
-);
+      const groupedByRowArray = Object.entries(_.groupBy(res.data, 'x')).map((item=>{
+  
+
+    
+
+      console.log(item[1].find(item=>item.row !==null).row)
+
+        return {
+          row:item[1].find(item=>item.row !==null).row,
+          x:item[1][0].x,
+          columns:item[1]
+        }
+
+      
+      }));
       setData(groupedByRowArray);
       console.log(groupedByRowArray)
     })
@@ -93,9 +105,9 @@ function Seats(props: any) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-[10px] p-[20px]"> 
-        { data.map((row: any, i: any) =><div className="flex gap-[10px]" key={i}>
-          <div className="size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500">
+      <div className="inline-flex flex-col gap-[10px] p-[20px]"> 
+        { data.map((row: any, i: any) =><div className="flex flex-wrap gap-[10px]" key={i}>
+          <div className="size-[30px] text-xs border border-gray-300 bg-gray-300 flex items-center justify-center hover:border-blue-500">
                <div className="flex flex-col">
                   <div>{row.row}</div>
                   <div className="text-xs text-gray-400 -mt-[5px]">{row.x}</div>
@@ -126,7 +138,7 @@ function Seats(props: any) {
               }} placement="bottomRight" trigger={['click']} className={`
               ${column.type == 'basic' ? 'size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500' : ''}
               ${column.type == 'blank' ? 'size-[30px] text-xs border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
-              ${column.type == 'break' ? 'w-full h-[10px] bg-gray-100 border border-transparent hover:border-blue-500' : ''}
+              ${column.type == 'break' ? 'w-full h-[30px] bg-gray-100 border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
               `}>
                 <div className="flex flex-col">
                   <div>{column.column}</div>
@@ -156,13 +168,13 @@ function Seats(props: any) {
         <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
               <Col span={12} >
-              <Form.Item label="Row" name="row" initialValue="0" rules={[{ required: true }]} >
+              <Form.Item label="X" name="x" initialValue="0" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
          
             </Col>
               <Col span={12}>
-     <Form.Item label="Column" name="column" initialValue="0" rules={[{ required: true }]} >
+     <Form.Item label="Y" name="y" initialValue="0" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
               </Col>
