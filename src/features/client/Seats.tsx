@@ -12,22 +12,18 @@ function _Seats() {
   }, [])
   return (
     <>
-      <div className="flex flex-wrap p-[20px]">
+            <div className="container max-w-[1170px] mx-auto py-[30px]">
+      <div className="flex flex-wrap gap-x-[10px]">
         {
-          seats.length > 0 && seats.map((column: any, i: any) =>
-            <React.Fragment key={i}>
-              {(() => {
-                switch (column.type) {
-                  case "space":
-                    return <div className="size-[25px] rounded flex items-center justify-center border border-transparent hover:border-blue-500"></div>;
-                  case "basic":
-                    return <div className="size-[25px] rounded flex items-center justify-center border border-gray-300 text-xs bg-gray-200">{column.number}</div>;
-                }
-              })()}
-              {column.column % 30 !== 0 && <div className="w-[5px]"></div>}
-              {column.column % 30 === 0 && <div className="h-[5px] w-full"></div>}
-            </React.Fragment>)
+          seats.length > 0 && seats.map((row: any, i: any) =>
+             <div key={i} className={
+             `${row.type == 'basic' ? 'size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500' : ''}
+              ${row.type == 'blank' ? 'size-[30px] text-xs border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
+              ${row.type == 'break' ? 'w-full h-[10px] bg-gray-100 border border-transparent hover:border-blue-500' : ''}`
+                         
+                        }>{row.number}</div>)
         }
+      </div>
       </div>
     </>
   )

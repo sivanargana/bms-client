@@ -24,7 +24,7 @@ function Movie() {
 
           <div className="container max-w-[1170px] mx-auto relative flex items-center py-[30px] gap-[20px]">
             <img src={`${import.meta.env.VITE_ASSETS_URL}${movie.poster}`} className="absolute left-0 top-0 w-full h-full z-[1] object-cover mask-b-from-0% mask-radial-[50%_80%] mask-radial-from-50% opacity-30" />
-            <img src={`${import.meta.env.VITE_ASSETS_URL}${movie.thumbnail}`} className="flex-none w-[250px] relative z-[2] rounded-lg" />
+            <img src={`${import.meta.env.VITE_ASSETS_URL}${movie.thumbnail}`} className="flex-none aspect-[2/3] object-cover w-[250px] relative z-[2] rounded-lg" />
             <div className="flex-auto relative z-[2]">
               <h1 className="text-white text-5xl font-bold mb-[10px]"> {movie.name}</h1>
               <p className="text-white/50 mb-[20px]"> {movie.duration} | {movie.genre} | {movie.censor} | {movie.release}</p>

@@ -53,7 +53,7 @@ function Home() {
        {
         movies.map((item: any, i: any) => <li key={i} >
           <NavLink to={`movie/${item.id}`} >
-          <img src={`${import.meta.env.VITE_ASSETS_URL}${item.thumbnail}`} className="rounded-lg" />
+          <img src={`${import.meta.env.VITE_ASSETS_URL}${item.thumbnail}`} className="aspect-[2/3] object-cover rounded-lg" />
           <div className="text-[18px] font-medium mt-[8px]">{item.name}</div>
           <div className="text-[16px] text-gray-400">{item.genre}</div>
         </NavLink>
