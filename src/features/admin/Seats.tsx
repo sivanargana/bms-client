@@ -95,7 +95,12 @@ function Seats(props: any) {
 
       <div className="flex flex-col gap-[10px] p-[20px]"> 
         { data.map((row: any, i: any) =><div className="flex gap-[10px]" key={i}>
-          <div className="size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500">{row.row}</div>
+          <div className="size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500">
+               <div className="flex flex-col">
+                  <div>{row.row}</div>
+                  <div className="text-xs text-gray-400 -mt-[5px]">{row.x}</div>
+                </div>
+          </div>
         {
           row.columns.map((column: any, i: any) => <Dropdown key={i} menu={{
                 items: [
@@ -124,8 +129,8 @@ function Seats(props: any) {
               ${column.type == 'break' ? 'w-full h-[10px] bg-gray-100 border border-transparent hover:border-blue-500' : ''}
               `}>
                 <div className="flex flex-col">
-                  <div>{column.number}</div>
-                  <div className="text-xs text-gray-400 -mt-[5px]">{column.column}</div>
+                  <div>{column.column}</div>
+                  <div className="text-xs text-gray-400 -mt-[5px]">{column.y}</div>
                 </div>
               </Dropdown>)
         }
