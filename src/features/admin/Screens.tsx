@@ -36,7 +36,7 @@ function Screens(props: any) {
     })
   };
   const onRead = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}screens/bytheater/${params.id}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}screens/${params.id}/bytheater`).then(res => {
       setData(res.data);
     })
   }
@@ -68,7 +68,7 @@ function Screens(props: any) {
       <Table rowKey="id" dataSource={data} columns={[
     {
       title: 'Info',
-      dataIndex: 'number',
+      dataIndex: 'name',
     },
     {
       title: 'Actions',
@@ -128,7 +128,7 @@ function Screens(props: any) {
         <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item label="Number" name="number" rules={[{required:true}]} >
+              <Form.Item label="Name | Number" name="name" rules={[{required:true}]} >
                 <Input />
               </Form.Item></Col>
           </Row>

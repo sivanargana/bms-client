@@ -1,9 +1,10 @@
-import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Table, Upload } from "antd"
+import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Select, Table, Upload } from "antd"
 import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router";
-function Crew(props: any) {
+import global from "../../global";
+function CastCrew(props: any) {
   const [modal, contextHolder] = useModal();
   const params = useParams()
   const [data, setData] = useState<any>([]);
@@ -17,7 +18,7 @@ function Crew(props: any) {
   const onCreate = async () => {
     try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}crew`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}cast-crew`, setFormData()).then(res => {
         form.resetFields()
         onRead();
         setOpen(false);
@@ -27,19 +28,19 @@ function Crew(props: any) {
     }
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}crew/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}cast-crew/${item.id}`, setFormData()).then(res => {
       form.resetFields()
       setOpen(false);
       onRead();
     })
   };
   const onRead = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}crew/bymovie/${params.id}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}cast-crew/${params.id}/bymovie`).then(res => {
       setData(res.data);
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}crew/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}cast-crew/${row.id}`).then(res => {
       setOpen(false);
       onRead();
     })
@@ -49,6 +50,7 @@ function Crew(props: any) {
     let formData: any = new FormData();
     formData.append('name', values.name);
     formData.append('role', values.role);
+    formData.append('type', values.type);
     formData.append('movieId', params.id);
     formData.append('img', values.img && values.img[0].originFileObj);
     return formData;
@@ -56,12 +58,12 @@ function Crew(props: any) {
   return (
     <>
       {contextHolder}
-         <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
-        <div className="text-lg font-bold">Crew</div>
+       <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
+        <div className="text-lg font-bold">Cast</div>
         <Breadcrumb>
           <Breadcrumb.Item>Admin</Breadcrumb.Item>
           <Breadcrumb.Item>Movies</Breadcrumb.Item>
-          <Breadcrumb.Item>Crew</Breadcrumb.Item>
+          <Breadcrumb.Item>Cast</Breadcrumb.Item>
         </Breadcrumb>
         <div className="ml-auto">
           <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
@@ -78,7 +80,7 @@ function Crew(props: any) {
           title: 'Info',
           render: (_: any, row: any) => <>
             <div className="text-lg font-bold mb-[0px]">{row.name}</div>
-            <div className="text-current/70">{row.role}</div>
+            <div className="text-current/70">{row.role} &bull; {row.type}</div>
           </>
         },
         {
@@ -138,6 +140,10 @@ function Crew(props: any) {
                 <Input />
               </Form.Item></Col>
             <Col span={24}>
+              <Form.Item label="Type" name="type" rules={[{ required: true }]} >
+                <Select options={global.CastCrew}  />
+              </Form.Item></Col>
+            <Col span={24}>
               <Form.Item label="Image" name="img" rules={[{ required: true }]} valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
                 <Upload showUploadList={false} beforeUpload={() => false}>
                   <Button icon={<i className="fi fi-rr-upload"></i>}>Upload</Button>
@@ -149,4 +155,4 @@ function Crew(props: any) {
     </>
   )
 }
-export default Crew
+export default CastCrew

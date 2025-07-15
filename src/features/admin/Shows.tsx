@@ -38,7 +38,7 @@ function _Shows(props: any) {
     })
   };
   const onRead = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}shows/byscreen/${params.sid}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}shows/${params.sid}/byscreen`).then(res => {
       setData(res.data);
     })
   }
