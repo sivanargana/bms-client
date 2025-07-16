@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useModal from "antd/es/modal/useModal";
 import { useWatch } from "antd/es/form/Form";
 import _ from "lodash";
+import SeatLayout from "../../components/SeatLayout";
 
 function Seats(props: any) {
   const [modal, contextHolder] = useModal();
@@ -93,68 +94,11 @@ function Seats(props: any) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-[10px] p-[20px]">
-        {data.map((group: any) =>
-          <div className="flex flex-col gap-[10px]">
-            <div>{group.group}</div>
-            {group.rows.map((row: any) =>
-              <div className="flex gap-[10px]">
-                <div className="size-[30px] flex items-center justify-center rounded border bg-black text-white">{row.row}</div>
-                {row.columns.map((column: any) =>
-                  <div className="flex gap-[10px]">
-                    <div className="size-[30px] flex items-center justify-center rounded border">{column.column}</div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+       <div className="flex justify-center">
+        <SeatLayout data={data} />
+       </div>
 
-      {/* <div className="inline-flex flex-col gap-[10px] p-[20px]">
-        {data.map((row: any, i: any) => <div className="flex flex-wrap gap-[10px]" key={i}>
-          <div className="size-[30px] text-xs border border-gray-300 bg-gray-300 flex items-center justify-center hover:border-blue-500">
-            <div className="flex flex-col">
-              <div>{row.row}</div>
-              <div className="text-xs text-gray-400 -mt-[5px]">{row.x}</div>
-            </div>
-          </div>
-          {
-            row.columns.map((column: any, i: any) => <Dropdown key={i} menu={{
-              items: [
-                { key: '1', label: "Update" },
-                { key: '2', label: "Delete" },
-              ], onClick: ({ key }) => {
-                switch (key) {
-                  case "1":
-                    setOpen(true); setItem(column); setIsEdit(true);
-                    break;
-                  case "2":
-                    modal.confirm({
-                      title: 'Delete the task',
-                      icon: <i className="fi fi-exclamation"></i>,
-                      content: 'Are you sure to delete this?',
-                      onOk() {
-                        onDelete(column)
-                      }
-                    });
-                    break;
-                }
-              }
-            }} placement="bottomRight" trigger={['click']} className={`
-              ${column.type == 'basic' ? 'size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500' : ''}
-              ${column.type == 'blank' ? 'size-[30px] text-xs border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
-              ${column.type == 'break' ? 'w-full h-[30px] bg-gray-100 border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
-              `}>
-              <div className="flex flex-col">
-                <div>{column.column}</div>
-                <div className="text-xs text-gray-400 -mt-[5px]">{column.y}</div>
-              </div>
-            </Dropdown>)
-          }
-        </div>)}
-      </div> */}
-
+     
 
 
 

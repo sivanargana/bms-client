@@ -25,7 +25,7 @@ function App() {
             <Route index element={<Home />} /> 
                <Route path="movie/:id" element={<Movie />} /> 
                <Route path="movie/:id/shows" element={<Shows />} /> 
-               <Route path="movie/:id/shows/:sid" element={<_Seats />} /> 
+               <Route path="movie/:id/shows/:sid/seats" element={<_Seats />} /> 
           </Route>
           <Route path="admin" element={<PrivateLayout />}>
           <Route path="banners" element={<Banners />} /> 

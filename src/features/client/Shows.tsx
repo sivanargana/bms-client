@@ -27,7 +27,7 @@ function Shows() {
                 <div>{theater.name} --  {theater.city}</div>
                 <div className="flex gap-[10px]">
                   {
-                    theater.shows.length && theater.shows.map((show: any, i: any) => <Link to={`${show.screenId}`} className="flex items-center justify-center border border-gray-200 h-[40px] w-[100px] rounded" key={i}>
+                    theater.shows.length && theater.shows.map((show: any, i: any) => <Link to={`${show.screenId}/seats`} className="flex items-center justify-center border border-green-500 border-l-[3px] h-[40px] w-[100px] rounded" key={i}>
                       {show.time}
                     </Link>
                     )}
