@@ -6,6 +6,7 @@ import useModal from "antd/es/modal/useModal";
 import { useWatch } from "antd/es/form/Form";
 import _ from "lodash";
 import SeatLayout from "../../components/SeatLayout";
+import SeatLayout2 from "../../components/SeatLayout2";
 
 function Seats(props: any) {
   const [modal, contextHolder] = useModal();
@@ -79,7 +80,7 @@ function Seats(props: any) {
       </div>
 
        <div className="flex justify-center">
-        <SeatLayout data={data} />
+        <SeatLayout2 data={data} />
        </div>
 
      
@@ -102,43 +103,30 @@ function Seats(props: any) {
         <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
             <Col span={12} >
-              <Form.Item label="X" name="x" initialValue="0" rules={[{ required: true }]} >
+              <Form.Item label="X" name="x" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
 
             </Col>
             <Col span={12}>
-              <Form.Item label="Y" name="y" initialValue="0" rules={[{ required: true }]} >
+              <Form.Item label="Row" name="row" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={24}>
-              <Form.Item label="Type" name="type" initialValue="blank" rules={[{ required: true }]} >
-                <Select>
-                  <Select.Option value="basic">Basic</Select.Option>
-                  <Select.Option value="blank">Blank</Select.Option>
-                  <Select.Option value="break">Break</Select.Option>
-                </Select>
-
+            <Col span={12}>
+              <Form.Item label="Y" name="y" rules={[{ required: true }]} >
+                <Input />
               </Form.Item>
             </Col>
+            <Col span={12}>
+              <Form.Item label="Column" name="column" rules={[{ required: true }]} >
+                <Input />
+              </Form.Item>
+            </Col>
+          
 
 
-
-            {typeValue === "basic" && <>
-              <Col span={24} >
-                <Form.Item label="Number" name="number" rules={[{ required: true }]} >
-                  <Input />
-                </Form.Item>
-              </Col>
-
-              <Col span={24}>
-                <Form.Item label="Price" name="price" initialValue="0" rules={[{ required: true }]} >
-                  <Input />
-                </Form.Item>
-              </Col>
-            </>}
-
+           
           </Row>
         </Form>
       </Drawer>
