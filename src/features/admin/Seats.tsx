@@ -56,7 +56,7 @@ function Seats(props: any) {
     })
   };
   const onRead = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}seats/${params.sid}/byscreen`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}screens/${params.sid}/byscreen`).then(res => {
 
 
 

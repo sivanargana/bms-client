@@ -1,12 +1,14 @@
 
 
 function SeatLayout({ data }: any) {
+
+     
     return (
         <div className="inline-flex flex-col gap-[10px] p-[20px]">
-            {data.map((group: any, i: any) => (
+            {data[0]?.areas && data[0]?.areas.map((area: any, i: any) => (
                 <div className="flex flex-col gap-[10px]" key={i}>
-                    <div className="text-center font-bold text-lg border-b border-gray-200 pb-[5px] my-[10px]">{group.group}</div>
-                    {group.rows.map((row: any, i: any) => (
+                    <div className="text-center font-bold text-lg border-b border-gray-200 pb-[5px] my-[10px]">{area.name}</div>
+                    {area.rows.map((row: any, i: any) => (
                         <div className="flex gap-[50px]" key={i}>
                             <div className="size-[30px] flex items-center justify-center rounded border bg-black text-white">{row.row}</div>
                             <div className="grid gap-[10px]" style={{ gridTemplateRows: `repeat(1,30px)`, gridTemplateColumns: `repeat(${20},30px)` }}>
