@@ -128,7 +128,7 @@ function Screens(props: any) {
         <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item label="Number" name="number" rules={[{required:true}]} >
+              <Form.Item label="Number | Name" name="name" rules={[{required:true}]} >
                 <Input />
               </Form.Item></Col>
           </Row>

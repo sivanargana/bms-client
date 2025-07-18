@@ -2,6 +2,13 @@
 import '@ant-design/v5-patch-for-react-19'; // 👈 Must come first
 import { ConfigProvider, unstableSetRender } from 'antd';
 import { createRoot } from 'react-dom/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:3100/graphql',
+  cache: new InMemoryCache(),
+});
+
 
 // 👇 Custom render patch for AntD compatibility
 unstableSetRender((node, container:any) => {
@@ -31,4 +38,6 @@ root.render(
      
       },
     }}
-  ><App /></ConfigProvider>);
+  >
+    <ApolloProvider client={client}><App /></ApolloProvider>
+    </ConfigProvider>);
