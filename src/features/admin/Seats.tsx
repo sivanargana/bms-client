@@ -13,29 +13,14 @@ function Seats(props: any) {
   const [data, setData] = useState<any>([]);
   const [item, setItem] = useState<any>({});
   const [open, setOpen] = useState(false);
-  const [openBulk, setOpenBulk] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
   const typeValue = useWatch('type', form);
   useEffect(() => {
     onRead();
 
   }, [])
-  const onBulk = async () => {
-    let values = form2.getFieldsValue(true);
-    values.screenId = params.sid;
-    try {
-      await form2.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}seats/bulk`, values).then(res => {
-        form2.resetFields()
-        onRead();
-        setOpenBulk(false);
-      })
-    } catch (errorInfo) {
-      console.log('❌ Validation Failed:', errorInfo);
-    }
-  };
+ 
   const onCreate = async () => {
     try {
       await form.validateFields();
@@ -88,8 +73,7 @@ function Seats(props: any) {
           <Breadcrumb.Item>Screens</Breadcrumb.Item>
           <Breadcrumb.Item>Seats</Breadcrumb.Item>
         </Breadcrumb>
-        <div className="ml-auto flex gap-[10px]">
-          <Button type="primary" onClick={() => setOpenBulk(true)}>Create Bulk</Button>
+        <div className="ml-auto flex gap-[10px]"> 
           <Button type="primary" onClick={() => setOpen(true)} ghost>Add New</Button>
         </div>
       </div>
@@ -158,44 +142,7 @@ function Seats(props: any) {
           </Row>
         </Form>
       </Drawer>
-      <Drawer
-        title="Create Bulk"
-        onClose={() => { setOpenBulk(false); }}
-        open={openBulk}
-        footer={<Button type="primary" onClick={onBulk}>Create</Button>}
-      >
-        <Form layout="vertical" form={form2} requiredMark={false} >
-          <Row gutter={16}>
-            <Col span={8} >
-              <Form.Item label="Start" name="start" initialValue="A" rules={[{ required: true }]} >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={8} >
-              <Form.Item label="End" name="end" initialValue="Z" rules={[{ required: true }]} >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={8} >
-              <Form.Item label="Range" name="range" initialValue="20" rules={[{ required: true }]} >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col span={12} >
-              <Form.Item label="Column Reverse" name="columnReverse" initialValue={false} rules={[{ required: true }]} >
-                <Switch />
-              </Form.Item>
-            </Col>
-
-            <Col span={12} >
-              <Form.Item label="Row Reverse" name="rowReverse" initialValue={false} rules={[{ required: true }]} >
-                <Switch />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Drawer>
+     
     </>
   )
 }
