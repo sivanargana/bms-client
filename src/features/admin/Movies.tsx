@@ -99,8 +99,7 @@ function Movies() {
               items: [
                 { key: '1', label: "Update" },
                 { key: '2', label: "Delete" },
-                { key: '3', label: "Manage Cast" },
-                { key: '4', label: "Manage Crew" },
+                { key: '3', label: "Manage Cast & Crew" }, 
               ], onClick: ({ key }) => {
                 switch (key) {
                   case "1":
@@ -117,11 +116,9 @@ function Movies() {
                     });
                     break;
                   case "3":
-                    navigate(`${row.id}/cast`)
+                    navigate(`${row.id}/cast-crew`)
                     break;
-                  case "4":
-                    navigate(`${row.id}/crew`)
-                    break;
+                 
                 }
               }
             }} placement="bottomRight" trigger={['click']}>

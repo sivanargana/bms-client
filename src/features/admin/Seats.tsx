@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useModal from "antd/es/modal/useModal";
 import { useWatch } from "antd/es/form/Form";
 import _ from "lodash";
+import SeatLayout from "../../components/SeatLayout";
 
 function Seats(props: any) {
   const [modal, contextHolder] = useModal();
@@ -16,13 +17,13 @@ function Seats(props: any) {
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
-   const typeValue = useWatch('type', form);
+  const typeValue = useWatch('type', form);
   useEffect(() => {
     onRead();
 
   }, [])
   const onBulk = async () => {
-       let values = form2.getFieldsValue(true);
+    let values = form2.getFieldsValue(true);
     values.screenId = params.sid;
     try {
       await form2.validateFields();
@@ -55,25 +56,13 @@ function Seats(props: any) {
     })
   };
   const onRead = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}seats/byscreen/${params.sid}`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}seats/${params.sid}/byscreen`).then(res => {
 
-      const groupedByRowArray = Object.entries(_.groupBy(res.data, 'x')).map((item=>{
-  
 
-    
 
-      console.log(item[1].find(item=>item.row !==null).row)
 
-        return {
-          row:item[1].find(item=>item.row !==null).row,
-          x:item[1][0].x,
-          columns:item[1]
-        }
+      setData(res.data);
 
-      
-      }));
-      setData(groupedByRowArray);
-      console.log(groupedByRowArray)
     })
   }
   const onDelete = (row: any) => {
@@ -105,50 +94,11 @@ function Seats(props: any) {
         </div>
       </div>
 
-      <div className="inline-flex flex-col gap-[10px] p-[20px]"> 
-        { data.map((row: any, i: any) =><div className="flex flex-wrap gap-[10px]" key={i}>
-          <div className="size-[30px] text-xs border border-gray-300 bg-gray-300 flex items-center justify-center hover:border-blue-500">
-               <div className="flex flex-col">
-                  <div>{row.row}</div>
-                  <div className="text-xs text-gray-400 -mt-[5px]">{row.x}</div>
-                </div>
-          </div>
-        {
-          row.columns.map((column: any, i: any) => <Dropdown key={i} menu={{
-                items: [
-                  { key: '1', label: "Update" },
-                  { key: '2', label: "Delete" },
-                ], onClick: ({ key }) => {
-                  switch (key) {
-                    case "1":
-                      setOpen(true); setItem(column); setIsEdit(true);
-                      break;
-                    case "2":
-                      modal.confirm({
-                        title: 'Delete the task',
-                        icon: <i className="fi fi-exclamation"></i>,
-                        content: 'Are you sure to delete this?',
-                        onOk() {
-                          onDelete(column)
-                        }
-                      });
-                      break;
-                  }
-                }
-              }} placement="bottomRight" trigger={['click']} className={`
-              ${column.type == 'basic' ? 'size-[30px] text-xs border border-gray-300 flex items-center justify-center hover:border-blue-500' : ''}
-              ${column.type == 'blank' ? 'size-[30px] text-xs border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
-              ${column.type == 'break' ? 'w-full h-[30px] bg-gray-100 border border-transparent flex items-center justify-center hover:border-blue-500' : ''}
-              `}>
-                <div className="flex flex-col">
-                  <div>{column.column}</div>
-                  <div className="text-xs text-gray-400 -mt-[5px]">{column.y}</div>
-                </div>
-              </Dropdown>)
-        }
-        </div>)}
-      </div>
+       <div className="flex justify-center">
+        <SeatLayout data={data} />
+       </div>
 
+     
 
 
 
@@ -167,42 +117,42 @@ function Seats(props: any) {
       >
         <Form layout="vertical" form={form} requiredMark={false} >
           <Row gutter={16}>
-              <Col span={12} >
+            <Col span={12} >
               <Form.Item label="X" name="x" initialValue="0" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
-         
+
             </Col>
-              <Col span={12}>
-     <Form.Item label="Y" name="y" initialValue="0" rules={[{ required: true }]} >
+            <Col span={12}>
+              <Form.Item label="Y" name="y" initialValue="0" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
-              </Col>
-              <Col span={24}>
+            </Col>
+            <Col span={24}>
               <Form.Item label="Type" name="type" initialValue="blank" rules={[{ required: true }]} >
                 <Select>
                   <Select.Option value="basic">Basic</Select.Option>
                   <Select.Option value="blank">Blank</Select.Option>
                   <Select.Option value="break">Break</Select.Option>
                 </Select>
-                
+
               </Form.Item>
             </Col>
 
-            
-             
+
+
             {typeValue === "basic" && <>
-            <Col span={24} >
-              <Form.Item label="Number" name="number" rules={[{ required: true }]} >
-                <Input />
-              </Form.Item>
-            </Col>
+              <Col span={24} >
+                <Form.Item label="Number" name="number" rules={[{ required: true }]} >
+                  <Input />
+                </Form.Item>
+              </Col>
 
-            <Col span={24}>
-              <Form.Item label="Price" name="price" initialValue="0" rules={[{ required: true }]} >
-                <Input />
-              </Form.Item>
-            </Col>
+              <Col span={24}>
+                <Form.Item label="Price" name="price" initialValue="0" rules={[{ required: true }]} >
+                  <Input />
+                </Form.Item>
+              </Col>
             </>}
 
           </Row>
@@ -216,34 +166,34 @@ function Seats(props: any) {
       >
         <Form layout="vertical" form={form2} requiredMark={false} >
           <Row gutter={16}>
-              <Col span={8} >
+            <Col span={8} >
               <Form.Item label="Start" name="start" initialValue="A" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
-              </Col>
-              <Col span={8} >
+            </Col>
+            <Col span={8} >
               <Form.Item label="End" name="end" initialValue="Z" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
-              </Col>
-              <Col span={8} >
+            </Col>
+            <Col span={8} >
               <Form.Item label="Range" name="range" initialValue="20" rules={[{ required: true }]} >
                 <Input />
               </Form.Item>
-              </Col>
+            </Col>
 
-                  <Col span={12} >
+            <Col span={12} >
               <Form.Item label="Column Reverse" name="columnReverse" initialValue={false} rules={[{ required: true }]} >
                 <Switch />
               </Form.Item>
-              </Col>
+            </Col>
 
-                  <Col span={12} >
+            <Col span={12} >
               <Form.Item label="Row Reverse" name="rowReverse" initialValue={false} rules={[{ required: true }]} >
                 <Switch />
               </Form.Item>
-              </Col>
-               </Row>
+            </Col>
+          </Row>
         </Form>
       </Drawer>
     </>

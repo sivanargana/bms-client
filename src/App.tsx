@@ -5,8 +5,6 @@ import PublicLayout from "./layouts/PublicLayout"
 import Movies from "./features/admin/Movies"
 import PrivateLayout from "./layouts/PrivateLayout"
 import Theaters from "./features/admin/Theaters"
-import Cast from "./features/admin/Cast"
-import Crew from "./features/admin/Crew"
 import Screens from "./features/admin/Screens"
 import Movie from "./features/client/Movie"
 import Shows from "./features/client/Shows"
@@ -14,6 +12,7 @@ import _Shows from "./features/admin/Shows"
 import Notfound from "./Notfound"
 import Seats from "./features/admin/Seats"
 import Banners from "./features/admin/Banners"
+import CastCrew from "./features/admin/CastCrew"
 
 
 function App() {
@@ -26,13 +25,12 @@ function App() {
             <Route index element={<Home />} /> 
                <Route path="movie/:id" element={<Movie />} /> 
                <Route path="movie/:id/shows" element={<Shows />} /> 
-               <Route path="movie/:id/shows/:sid" element={<_Seats />} /> 
+               <Route path="movie/:id/shows/:sid/seats" element={<_Seats />} /> 
           </Route>
           <Route path="admin" element={<PrivateLayout />}>
           <Route path="banners" element={<Banners />} /> 
           <Route path="movies" element={<Movies />} /> 
-          <Route path="movies/:id/cast" element={<Cast />} /> 
-          <Route path="movies/:id/crew" element={<Crew />} /> 
+          <Route path="movies/:id/cast-crew" element={<CastCrew />} />  
           <Route path="theaters" element={<Theaters />} /> 
           <Route path="theaters/:id/screens" element={<Screens />} /> 
           <Route path="theaters/:id/screens/:sid/seats" element={<Seats />} /> 

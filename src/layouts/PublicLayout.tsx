@@ -6,8 +6,8 @@ function PublicLayout() {
   return (
     <>
       <div className="bg-gray-100 min-h-screen">
-        <div className="shadow">
-          <div className="h-[64px] bg-white flex flex-col justify-center px-[20px] sticky top-0 z-[999]">
+        <div className="shadow sticky top-0 z-[999]">
+          <div className="h-[64px] bg-white flex flex-col justify-center px-[20px]">
           <div className="container">
             <div className="flex items-center gap-[16px]">
               <Link to="/"><img src="/logo.svg" /></Link>
@@ -25,7 +25,7 @@ function PublicLayout() {
 
           </div>
         </div>
-        <div className="h-[40px] bg-gray-100/50"></div>
+        <div className="h-[40px] bg-gray-100"></div>
         </div>
         <Outlet />
 
