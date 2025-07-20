@@ -63,6 +63,9 @@ function Seats(props: any) {
     values.screenId = params.sid;
     return values;
   }
+  const onChange =()=>{
+        onRead();
+  }
   return (
     <>
       {contextHolder}
@@ -80,7 +83,7 @@ function Seats(props: any) {
       </div>
 
        <div className="flex justify-center">
-        <SeatLayout2 data={data} />
+        <SeatLayout2 data={data} id={params.sid} onChange={onChange} />
        </div>
 
      

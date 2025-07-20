@@ -7,7 +7,7 @@ function _Seats() {
   const [seats, setSeats] = useState<any>([])
   useEffect(() => {
     console.log("hi")
-    axios.get(`${import.meta.env.VITE_API_URL}seats/${params.sid}/byscreen`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}screens/${params.sid}/byscreen`).then(res => {
       setSeats(res.data)
  
     })

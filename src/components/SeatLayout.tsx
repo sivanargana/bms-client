@@ -13,9 +13,9 @@ function SeatLayout({ data }: any) {
                             <div className="size-[30px] flex items-center justify-center rounded border bg-black text-white">{row.row}</div>
                             <div className="grid gap-[10px]" style={{ gridTemplateRows: `repeat(1,30px)`, gridTemplateColumns: `repeat(${20},30px)` }}>
                                 {row.columns.map((column: any, i: any) => (
-                                    <div key={i}>
+                                    <div key={i} style={{ gridColumnStart: column.y }}>
                                         {column.status === 0 && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-gray-300 bg-gray-300">{column.column}</div>}
-                                        {column.status === 1 && <label className="size-[30px] text-xs flex items-center justify-center rounded bg-white text-gray-400 border border-green-500 [&:has(input:checked)]:bg-black [&:has(input:checked)]:text-white" style={{ gridColumnStart: column.y }}>
+                                        {column.status === 1 && <label className="size-[30px] text-xs flex items-center justify-center rounded bg-white text-gray-400 border border-green-500 [&:has(input:checked)]:bg-black [&:has(input:checked)]:text-white" >
                                             <input type="checkbox" className="hidden" />
                                             {column.column}
                                         </label>}
