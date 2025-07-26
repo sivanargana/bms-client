@@ -3,7 +3,7 @@ import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router";
-function _Shows(props: any) {
+function _Shows() {
   const [modal, contextHolder] = useModal();
   const params = useParams();
   const [data, setData] = useState<any>([]);
@@ -21,7 +21,7 @@ function _Shows(props: any) {
   const onCreate = async () => {
     try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}shows`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}shows`, setFormData()).then(() => {
         form.resetFields()
         onRead();
         setOpen(false);
@@ -31,7 +31,7 @@ function _Shows(props: any) {
     }
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}shows/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}shows/${item.id}`, setFormData()).then(() => {
       form.resetFields()
       setOpen(false);
       onRead();
@@ -43,7 +43,7 @@ function _Shows(props: any) {
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}shows/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}shows/${row.id}`).then(() => {
       setOpen(false);
       onRead();
     })
@@ -110,7 +110,7 @@ function _Shows(props: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           if (isEdit) {
             form.setFieldsValue(item)
           } else {

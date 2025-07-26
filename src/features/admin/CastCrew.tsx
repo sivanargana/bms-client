@@ -4,7 +4,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router";
 import global from "../../global";
-function CastCrew(props: any) {
+function CastCrew() {
   const [modal, contextHolder] = useModal();
   const params = useParams()
   const [data, setData] = useState<any>([]);
@@ -18,7 +18,7 @@ function CastCrew(props: any) {
   const onCreate = async () => {
     try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}cast-crew`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}cast-crew`, setFormData()).then(() => {
         form.resetFields()
         onRead();
         setOpen(false);
@@ -28,7 +28,7 @@ function CastCrew(props: any) {
     }
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}cast-crew/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}cast-crew/${item.id}`, setFormData()).then(() => {
       form.resetFields()
       setOpen(false);
       onRead();
@@ -40,7 +40,7 @@ function CastCrew(props: any) {
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}cast-crew/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}cast-crew/${row.id}`).then(() => {
       setOpen(false);
       onRead();
     })
@@ -119,7 +119,7 @@ function CastCrew(props: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           let { img, ...rest } = item;
           if (isEdit) {
             form.setFieldsValue(rest)

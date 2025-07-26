@@ -20,7 +20,7 @@ function Movies() {
   const onCreate = async () => {
     try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}movies`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}movies`, setFormData()).then(() => {
         form.resetFields()
         onRead();
         setOpen(false);
@@ -30,7 +30,7 @@ function Movies() {
     }
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}movies/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}movies/${item.id}`, setFormData()).then(() => {
       form.resetFields()
       setOpen(false);
       onRead();
@@ -42,7 +42,7 @@ function Movies() {
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}movies/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}movies/${row.id}`).then(() => {
       setOpen(false);
       onRead();
     })
@@ -65,12 +65,14 @@ function Movies() {
       {contextHolder}
       <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
         <div className="text-lg font-bold">Movies</div>
+ 
+
         <Breadcrumb>
           <Breadcrumb.Item>Admin</Breadcrumb.Item>
           <Breadcrumb.Item>Movies</Breadcrumb.Item>
         </Breadcrumb>
         <div className="ml-auto">
-          <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
+             <Button type="primary" onClick={() => setOpen(true)}>Add New</Button>
         </div>
       </div>
       <Table rowKey="id" dataSource={movies} columns={[
@@ -132,7 +134,7 @@ function Movies() {
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
         width={600}
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           let { thumbnail, poster, duration, ...rest } = item;
           rest.duration = dayjs(duration, 'HH:mm')
           if (isEdit) {

@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Form, Input, Popover, Row, Select } from "antd"
+import { Button, Col, Drawer, Form, Input, Popover, Row } from "antd"
 import useModal from "antd/es/modal/useModal";
 import axios from "axios";
 import { useState } from "react";
@@ -14,7 +14,7 @@ function Seat({ columns,onChange,id }: any) {
     const onCreate = async () => {
         try {
             await form.validateFields();
-            axios.post(`${import.meta.env.VITE_API_URL}seats`, form.getFieldsValue(true)).then(res => {
+            axios.post(`${import.meta.env.VITE_API_URL}seats`, form.getFieldsValue(true)).then(() => {
                 form.resetFields()
                 onChange()
                 setOpen(false);
@@ -25,7 +25,7 @@ function Seat({ columns,onChange,id }: any) {
     };
     const onUpdate = () => {
         let { columns, ...rest } = form.getFieldsValue(true);
-        axios.put(`${import.meta.env.VITE_API_URL}seats/${item.id}`, rest).then(res => {
+        axios.put(`${import.meta.env.VITE_API_URL}seats/${item.id}`, rest).then(() => {
             form.resetFields()
             setOpen(false);
             onChange()
@@ -33,7 +33,7 @@ function Seat({ columns,onChange,id }: any) {
     };
 
     const onDelete = (item: any) => {
-        axios.delete(`${import.meta.env.VITE_API_URL}seats/${item.id}`).then(res => {
+        axios.delete(`${import.meta.env.VITE_API_URL}seats/${item.id}`).then(() => {
             onChange()
         })
     }
@@ -65,7 +65,7 @@ function Seat({ columns,onChange,id }: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open} 
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           let { img, ...rest } = item;
           if (isEdit) {
             form.setFieldsValue(rest)
@@ -114,7 +114,7 @@ function Rows({ rows,onChange,id }: any) {
     const onCreate = async () => {
         try {
             await form.validateFields();
-            axios.post(`${import.meta.env.VITE_API_URL}rows`, form.getFieldsValue(true)).then(res => {
+            axios.post(`${import.meta.env.VITE_API_URL}rows`, form.getFieldsValue(true)).then(() => {
                 form.resetFields()
                 onChange()
                 setOpen(false);
@@ -125,7 +125,7 @@ function Rows({ rows,onChange,id }: any) {
     };
     const onUpdate = () => {
         let { columns, ...rest } = form.getFieldsValue(true);
-        axios.put(`${import.meta.env.VITE_API_URL}rows/${item.id}`, rest).then(res => {
+        axios.put(`${import.meta.env.VITE_API_URL}rows/${item.id}`, rest).then(() => {
             form.resetFields()
             setOpen(false);
             onChange()
@@ -133,7 +133,7 @@ function Rows({ rows,onChange,id }: any) {
     };
 
     const onDelete = (item: any) => {
-        axios.delete(`${import.meta.env.VITE_API_URL}rows/${item.id}`).then(res => {
+        axios.delete(`${import.meta.env.VITE_API_URL}rows/${item.id}`).then(() => {
             onChange()
         })
     }
@@ -164,7 +164,7 @@ function Rows({ rows,onChange,id }: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open} 
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           let { img, ...rest } = item;
           if (isEdit) {
             form.setFieldsValue(rest)
@@ -209,7 +209,7 @@ function Area({ areas, onChange, id }: any) {
     const onCreate = async () => {
         try {
             await form.validateFields();
-            axios.post(`${import.meta.env.VITE_API_URL}areas`, form.getFieldsValue(true)).then(res => {
+            axios.post(`${import.meta.env.VITE_API_URL}areas`, form.getFieldsValue(true)).then(() => {
                 form.resetFields()
                 onChange()
                 setOpen(false);
@@ -220,7 +220,7 @@ function Area({ areas, onChange, id }: any) {
     };
     const onUpdate = () => {
         let { rows, ...rest } = form.getFieldsValue(true);
-        axios.put(`${import.meta.env.VITE_API_URL}areas/${item.id}`, rest).then(res => {
+        axios.put(`${import.meta.env.VITE_API_URL}areas/${item.id}`, rest).then(() => {
             form.resetFields()
             setOpen(false);
             onChange()
@@ -228,7 +228,7 @@ function Area({ areas, onChange, id }: any) {
     };
 
     const onDelete = (item: any) => {
-        axios.delete(`${import.meta.env.VITE_API_URL}areas/${item.id}`).then(res => {
+        axios.delete(`${import.meta.env.VITE_API_URL}areas/${item.id}`).then(() => {
             onChange()
         })
     }
@@ -262,7 +262,7 @@ function Area({ areas, onChange, id }: any) {
                 title={isEdit ? 'Update Record' : 'Add Record'}
                 onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
                 open={open}
-                afterOpenChange={(val) => {
+                afterOpenChange={() => {
                     if (isEdit) {
                         form.setFieldsValue(item)
                     } else {

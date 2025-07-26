@@ -1,6 +1,5 @@
 
 import { gql, useApolloClient } from "@apollo/client";
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router"
 import { Autoplay } from "swiper/modules";

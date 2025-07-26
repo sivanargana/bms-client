@@ -3,7 +3,7 @@ import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router";
-function Theaters(props: any) {
+function Theaters() {
   const navigate = useNavigate();
   const [modal, contextHolder] = useModal();
   const [data, setData] = useState<any>([]);
@@ -17,7 +17,7 @@ function Theaters(props: any) {
   const onCreate = async () => {
     try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}theaters`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}theaters`, setFormData()).then(() => {
         form.resetFields()
         onRead();
         setOpen(false);
@@ -27,7 +27,7 @@ function Theaters(props: any) {
     }
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}theaters/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}theaters/${item.id}`, setFormData()).then(() => {
       form.resetFields()
       setOpen(false);
       onRead();
@@ -39,7 +39,7 @@ function Theaters(props: any) {
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}theaters/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}theaters/${row.id}`).then(() => {
       setOpen(false);
       onRead();
     })
@@ -109,7 +109,7 @@ function Theaters(props: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           let { img, ...rest } = item;
           if (isEdit) {
             form.setFieldsValue(rest)

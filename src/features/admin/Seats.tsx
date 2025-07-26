@@ -1,22 +1,22 @@
-import { Breadcrumb, Button, Col, Drawer, Dropdown, Form, Input, Row, Select, Switch, Table } from "antd"
+import { Breadcrumb, Button, Col, Drawer, Form, Input, Row } from "antd"
 import axios from "axios"
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import useModal from "antd/es/modal/useModal";
-import { useWatch } from "antd/es/form/Form";
+// import useModal from "antd/es/modal/useModal";
+// import { useWatch } from "antd/es/form/Form";
 import _ from "lodash";
-import SeatLayout from "../../components/SeatLayout";
+ 
 import SeatLayout2 from "../../components/SeatLayout2";
 
-function Seats(props: any) {
-  const [modal, contextHolder] = useModal();
+function Seats() {
+  // const [modal, contextHolder] = useModal();
   const params = useParams();
   const [data, setData] = useState<any>([]);
   const [item, setItem] = useState<any>({});
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
-  const typeValue = useWatch('type', form);
+  // const typeValue = useWatch('type', form);
   useEffect(() => {
     onRead();
 
@@ -25,7 +25,7 @@ function Seats(props: any) {
   const onCreate = async () => {
     try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}seats`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}seats`, setFormData()).then(() => {
         form.resetFields()
         onRead();
         setOpen(false);
@@ -35,7 +35,7 @@ function Seats(props: any) {
     }
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}seats/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}seats/${item.id}`, setFormData()).then(() => {
       form.resetFields()
       setOpen(false);
       onRead();
@@ -51,12 +51,12 @@ function Seats(props: any) {
 
     })
   }
-  const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}seats/${row.id}`).then(res => {
-      setOpen(false);
-      onRead();
-    })
-  }
+  // const onDelete = (row: any) => {
+  //   axios.delete(`${import.meta.env.VITE_API_URL}seats/${row.id}`).then(() => {
+  //     setOpen(false);
+  //     onRead();
+  //   })
+  // }
   const setFormData = () => {
     let values = form.getFieldsValue(true);
     values.theaterId = params.id;
@@ -68,7 +68,7 @@ function Seats(props: any) {
   }
   return (
     <>
-      {contextHolder}
+      {/* {contextHolder} */}
       <div className="flex items-center gap-[20px] px-[20px] py-[10px] bg-white shadow relative z-[4]">
         <div className="text-lg font-bold">Seats</div>
         <Breadcrumb>
@@ -94,7 +94,7 @@ function Seats(props: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open}
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           if (isEdit) {
             form.setFieldsValue(item)
           } else {

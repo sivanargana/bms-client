@@ -3,7 +3,7 @@ import useModal from "antd/es/modal/useModal";
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router";
-function Screens(props: any) {
+function Screens() {
   const [modal, contextHolder] = useModal();
   const navigate = useNavigate();
   const params = useParams();
@@ -18,7 +18,7 @@ function Screens(props: any) {
   const onCreate = async () => {
       try {
       await form.validateFields();
-      axios.post(`${import.meta.env.VITE_API_URL}screens`, setFormData()).then(res => {
+      axios.post(`${import.meta.env.VITE_API_URL}screens`, setFormData()).then(() => {
       form.resetFields()
       onRead();
       setOpen(false);
@@ -29,7 +29,7 @@ function Screens(props: any) {
  
   };
   const onUpdate = () => {
-    axios.put(`${import.meta.env.VITE_API_URL}screens/${item.id}`, setFormData()).then(res => {
+    axios.put(`${import.meta.env.VITE_API_URL}screens/${item.id}`, setFormData()).then(() => {
       form.resetFields()
       setOpen(false);
       onRead();
@@ -41,7 +41,7 @@ function Screens(props: any) {
     })
   }
   const onDelete = (row: any) => {
-    axios.delete(`${import.meta.env.VITE_API_URL}screens/${row.id}`).then(res => {
+    axios.delete(`${import.meta.env.VITE_API_URL}screens/${row.id}`).then(() => {
       setOpen(false);
       onRead();
     })
@@ -115,7 +115,7 @@ function Screens(props: any) {
         title={isEdit ? 'Update Record' : 'Add Record'}
         onClose={() => { setOpen(false); setIsEdit(false); setItem({}) }}
         open={open} 
-        afterOpenChange={(val) => {
+        afterOpenChange={() => {
           let { img, ...rest } = item;
           if (isEdit) {
             form.setFieldsValue(rest)
