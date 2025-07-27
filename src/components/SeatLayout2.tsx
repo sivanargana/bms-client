@@ -147,6 +147,11 @@ function Rows({ rows, onChange, id }: any) {
             onChange()
         })
     }
+    const onDuplicate = (item: any) => {
+        axios.post(`${import.meta.env.VITE_API_URL}rows/${item.id}/duplicate`).then(() => {
+            onChange()
+        })
+    }
     return (
         <>
             {contextHolder}
@@ -154,7 +159,19 @@ function Rows({ rows, onChange, id }: any) {
                 <div className="flex justify-center"> <Button shape="circle" size="small" icon={<i className="fi fi-rr-plus"></i>} onClick={() => { form.resetFields(); setOpen(true) }} /></div>
                 {rows?.map((row: any, i: any) => (
                     <div className="flex" key={i}>
-                        <Popover content={<></>}>
+                        <Popover content={<>
+
+                             <Button shape="circle" size="small" icon={<i className="fi fi-rr-copy"></i>} onClick={() => onDuplicate(row)} />
+
+                                  <Button shape="circle" size="small" icon={<i className="fi fi-rr-trash"></i>} onClick={() => modal.confirm({
+                                title: 'Delete the task',
+                                icon: <i className="fi fi-exclamation"></i>,
+                                content: 'Are you sure to delete this?',
+                                onOk() {
+                                    onDelete(row)
+                                }
+                            })} />
+                            </>}>
                             <div className="relative">
                                 <span className="absolute top-0 left-0 -translate-[50%] text-xs">#{row.order}</span>
                                 <div className="size-[30px] flex items-center justify-center rounded border bg-black text-white">{row.row}</div>
