@@ -1,44 +1,27 @@
-
 import { gql, useApolloClient } from "@apollo/client";
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router"
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-
 function Home() {
-
   const client = useApolloClient();
-
-
   const [movies, setMovies] = useState<any>([])
-
   useEffect(() => {
-
-    // axios.get(`${import.meta.env.VITE_API_URL}movies`).then(res => {
-    //   setMovies(res.data)
-    // })
-
-
-    
-  client.query({
-    query: gql`
+    client.query({
+      query: gql`
       query {
         movies{ 
+          id,
           name,
           thumbnail
           genre
         }
       }	
     `,
-  }).then((result) =>  setMovies(result.data.movies));
-
+    }).then((result) => setMovies(result.data.movies));
   }, [])
-
   return (
-
     <>
-
       <div className="py-[10px] bg-gray-200">
         <Swiper
           modules={[Autoplay]}
@@ -47,24 +30,14 @@ function Home() {
           slidesPerView={"auto"}
           centeredSlides={true}
           initialSlide={1}
-
           loop={true}
-
-
-
         >
           <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1744877848242_revplaycard1240x300.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
           <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1751871230107_karatekiddesktop.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
-
-
           <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1744877848242_revplaycard1240x300.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
           <SwiperSlide className="!w-auto"><img src="https://assets-in-gm.bmscdn.com/promotions/cms/creatives/1751871230107_karatekiddesktop.jpg" className="w-[1240px] rounded-lg" /></SwiperSlide>
-
-
-
         </Swiper>
       </div>
-
       <div className="container max-w-[1170px] mx-auto py-[20px]">
         <h2 className="text-[24px] font-bold mb-[10px]">Recommended Movies</h2>
         <ul className="grid grid-cols-5 gap-[32px]">
@@ -78,13 +51,8 @@ function Home() {
             </li>)
           }
         </ul>
-
       </div>
-
-
     </>
-
   )
 }
-
 export default Home

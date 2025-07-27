@@ -3,7 +3,28 @@ const global = {
     { label: "Cast", value: "cast" },
     { label: "Crew", value: "crew" },
   ],
-
+  seat:{
+   type:[
+    {
+      label:"Seat",
+      value:1
+    },
+    {
+      label:"Gap",
+      value:0
+    }
+   ],
+      status:[
+    {
+      label:"Sold",
+      value:0
+    },
+    {
+      label:"Available",
+      value:1
+    }
+   ]
+  },
   genre: [
     { label: "Action", value: "Action" },
     { label: "Adventure", value: "Adventure" },
