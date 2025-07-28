@@ -13,6 +13,7 @@ function Home() {
         movies{ 
           id,
           name,
+          slug,
           thumbnail
           genre
         }
@@ -43,7 +44,7 @@ function Home() {
         <ul className="grid grid-cols-5 gap-[32px]">
           {
             movies.map((item: any, i: any) => <li key={i} >
-              <NavLink to={`movie/${item.id}`} >
+              <NavLink to={`movie/${item.slug}`} >
                 <img src={`${import.meta.env.VITE_ASSETS_URL}${item.thumbnail}`} className="aspect-[2/3] object-cover rounded-lg w-full" />
                 <div className="text-[18px] font-medium mt-[8px]">{item.name}</div>
                 <div className="text-[16px] text-gray-400">{item.genre}</div>

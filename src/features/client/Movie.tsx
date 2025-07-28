@@ -10,7 +10,7 @@ function Movie() {
 
   useEffect(() => {
 
-    axios.get(`${import.meta.env.VITE_API_URL}movies/${params.id}/overview`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}movies/${params.slug}/overview`).then(res => {
       setMovie(res.data)
     })
 
