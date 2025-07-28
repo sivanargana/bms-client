@@ -42,9 +42,9 @@ function Seat({ columns, onChange, id }: any) {
         <>
             {contextHolder}
             <Button shape="circle" icon={<i className="fi fi-rr-plus"></i>} onClick={() => { form.resetFields(); setOpen(true) }} />
-            <div className="grid gap-[10px]" style={{ gridTemplateRows: `repeat(1,30px)`, gridTemplateColumns: `repeat(${20},30px)` }}>
+            <div className="flex gap-[10px]">
                 {columns?.map((column: any, i: any) => (
-                    <div key={i} style={{ gridColumnStart: column.y }}>
+                    <div key={i}>
                         <Popover content={<>
 
                             <Button shape="circle" size="small" icon={<i className="fi fi-rr-trash"></i>} onClick={() => modal.confirm({
@@ -59,7 +59,7 @@ function Seat({ columns, onChange, id }: any) {
                         </>}>
                             <div className="relative">
                                 <span className="absolute top-0 left-0 -translate-[50%] text-xs">#{column.order}</span>
-                                {column.type === 0 && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-red-300 bg-red-300">{column.column}</div>}
+                                {column.type === 0 && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-red-300 bg-red-300"></div>}
                                 {column.type === 1 && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-gray-300 bg-gray-300">{column.column}</div>}
                             </div>
                         </Popover>
@@ -82,26 +82,28 @@ function Seat({ columns, onChange, id }: any) {
             >
                 <Form layout="vertical" form={form} requiredMark={false} >
                     <Row gutter={16}>
+                              <Col span={24}>
+                            <Form.Item label="Type" name="type" initialValue={1} rules={[{ required: true }]} >
+                                <Select options={global.seat.type} />
+                            </Form.Item>
+                        </Col>
                         <Col span={24}>
                             <Form.Item label="Order" name="order" rules={[{ required: true }]} >
                                 <Input />
                             </Form.Item>
                         </Col>
+                        
                         <Col span={24}>
                             <Form.Item label="Column" name="column" >
                                 <Input />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item label="Status" name="status" initialValue={1} rules={[{ required: true }]} >
+                            <Form.Item label="Status" name="status"  >
                                 <Select options={global.seat.status} />
                             </Form.Item>
                         </Col>
-                        <Col span={24}>
-                            <Form.Item label="Type" name="type" initialValue={1} rules={[{ required: true }]} >
-                                <Select options={global.seat.type} />
-                            </Form.Item>
-                        </Col>
+                  
                         <Col span={24}>
                             <Form.Item label="Row" name="rowId" initialValue={id} rules={[{ required: true }]} >
                                 <Input />
@@ -171,6 +173,7 @@ function Rows({ rows, onChange, id }: any) {
                                     onDelete(row)
                                 }
                             })} />
+                              <Button shape="circle" size="small" icon={<i className="fi fi-rr-pencil"></i>} onClick={() => { setOpen(true); setItem(row); setIsEdit(true); }} />
                             </>}>
                             <div className="relative">
                                 <span className="absolute top-0 left-0 -translate-[50%] text-xs">#{row.order}</span>
