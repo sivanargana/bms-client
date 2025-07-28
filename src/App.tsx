@@ -24,8 +24,8 @@ function App() {
           <Route path="/" element={<PublicLayout />}>
             <Route index element={<Home />} /> 
                <Route path="movie/:slug" element={<Movie />} /> 
-               <Route path="movie/:id/shows" element={<Shows />} /> 
-               <Route path="movie/:id/shows/:sid/seats" element={<_Seats />} /> 
+               <Route path="movie/:slug/shows" element={<Shows />} /> 
+               <Route path="movie/:slug/shows/:sid/seats" element={<_Seats />} /> 
           </Route>
           <Route path="admin" element={<PrivateLayout />}>
           <Route path="banners" element={<Banners />} /> 

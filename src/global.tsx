@@ -15,9 +15,13 @@ const global = {
     }
    ],
       status:[
+          {
+      label:"Unassigned",
+      value:0
+    },
     {
       label:"Sold",
-      value:0
+      value:2
     },
     {
       label:"Available",

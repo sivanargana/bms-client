@@ -10,7 +10,7 @@ function Shows() {
 
   useEffect(() => {
 
-    axios.get(`${import.meta.env.VITE_API_URL}theaters/${params.id}/overview`).then(res => {
+    axios.get(`${import.meta.env.VITE_API_URL}theaters/${params.slug}/overview`).then(res => {
       setShows(res.data)
     })
 

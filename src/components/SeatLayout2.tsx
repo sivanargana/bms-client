@@ -25,7 +25,7 @@ function Seat({ columns, onChange, id }: any) {
         }
     };
     const onUpdate = () => {
-        let { columns, ...rest } = form.getFieldsValue(true);
+        let { id,type,columns, ...rest } = form.getFieldsValue(true);
         axios.put(`${import.meta.env.VITE_API_URL}seats/${item.id}`, rest).then(() => {
             form.resetFields()
             setOpen(false);
@@ -41,8 +41,9 @@ function Seat({ columns, onChange, id }: any) {
     return (
         <>
             {contextHolder}
-            <Button shape="circle" icon={<i className="fi fi-rr-plus"></i>} onClick={() => { form.resetFields(); setOpen(true) }} />
-            <div className="flex gap-[10px]">
+           
+            <div className="flex items-center gap-[10px] border border-gray-300 border-dashed rounded-lg p-[5px]">
+                 <Button shape="circle" size="small" icon={<i className="fi fi-rr-plus"></i>} onClick={() => { form.resetFields(); setOpen(true) }} />
                 {columns?.map((column: any, i: any) => (
                     <div key={i}>
                         <Popover content={<>
@@ -57,10 +58,11 @@ function Seat({ columns, onChange, id }: any) {
                             })} />
                             <Button shape="circle" size="small" icon={<i className="fi fi-rr-pencil"></i>} onClick={() => { setOpen(true); setItem(column); setIsEdit(true); }} />
                         </>}>
-                            <div className="relative">
-                                <span className="absolute top-0 left-0 -translate-[50%] text-xs">#{column.order}</span>
-                                {column.type === 0 && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-red-300 bg-red-300"></div>}
-                                {column.type === 1 && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-gray-300 bg-gray-300">{column.column}</div>}
+                        <div className="flex flex-col items-center">
+                                <span className="text-xs text-gray-400">#{column.order}</span>
+                               {column.type === "unassigned" && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-gray-300"></div>}
+                               {column.type === "sold" && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-gray-300 bg-gray-300">{column.column}</div>}
+                               {column.type === "available" && <div className="size-[30px] text-xs flex items-center justify-center rounded border border-green-300">{column.column}</div>}
                             </div>
                         </Popover>
                     </div>
@@ -82,11 +84,7 @@ function Seat({ columns, onChange, id }: any) {
             >
                 <Form layout="vertical" form={form} requiredMark={false} >
                     <Row gutter={16}>
-                              <Col span={24}>
-                            <Form.Item label="Type" name="type" initialValue={1} rules={[{ required: true }]} >
-                                <Select options={global.seat.type} />
-                            </Form.Item>
-                        </Col>
+                   
                         <Col span={24}>
                             <Form.Item label="Order" name="order" rules={[{ required: true }]} >
                                 <Input />
@@ -160,7 +158,7 @@ function Rows({ rows, onChange, id }: any) {
             <div className="flex flex-col gap-[10px] border border-gray-300 border-dashed rounded-lg p-[5px]">
                 <div className="flex justify-center"> <Button shape="circle" size="small" icon={<i className="fi fi-rr-plus"></i>} onClick={() => { form.resetFields(); setOpen(true) }} /></div>
                 {rows?.map((row: any, i: any) => (
-                    <div className="flex" key={i}>
+                    <div className="flex items-center gap-[10px] border border-gray-300 border-dashed rounded-lg p-[5px]" key={i}>
                         <Popover content={<>
 
                              <Button shape="circle" size="small" icon={<i className="fi fi-rr-copy"></i>} onClick={() => onDuplicate(row)} />
@@ -175,21 +173,13 @@ function Rows({ rows, onChange, id }: any) {
                             })} />
                               <Button shape="circle" size="small" icon={<i className="fi fi-rr-pencil"></i>} onClick={() => { setOpen(true); setItem(row); setIsEdit(true); }} />
                             </>}>
-                            <div className="relative">
-                                <span className="absolute top-0 left-0 -translate-[50%] text-xs">#{row.order}</span>
+                            <div className="flex flex-col items-center">
+                                <span className="text-xs text-gray-400">#{row.order}</span>
                                 <div className="size-[30px] flex items-center justify-center rounded border bg-black text-white">{row.row}</div>
                             </div>
                         </Popover>
                         <Seat columns={row.columns} id={row.id} onChange={onChange} />
-                        <Button shape="circle" size="small" icon={<i className="fi fi-rr-trash"></i>} onClick={() => modal.confirm({
-                            title: 'Delete the task',
-                            icon: <i className="fi fi-exclamation"></i>,
-                            content: 'Are you sure to delete this?',
-                            onOk() {
-                                onDelete(row)
-                            }
-                        })} />
-                        <Button shape="circle" size="small" icon={<i className="fi fi-rr-pencil"></i>} onClick={() => { setOpen(true); setItem(row); setIsEdit(true); }} />
+               
                     </div>
                 ))}
             </div>
@@ -273,7 +263,7 @@ function Area({ areas, onChange, id }: any) {
                 {areas?.map((area: any, i: any) => (
                     <div key={i} className="border border-gray-300 border-dashed rounded-lg p-[5px]">
                         <div className="text-left font-bold text-lg border-b border-gray-200 pb-[5px] mb-[10px] flex gap-[5px]">
-                            <div className="flex-auto">{area.name}</div>
+                            <div className="flex-auto">{area.name} - {area.price}</div>
                             <Button shape="circle" size="small" icon={<i className="fi fi-rr-trash"></i>} onClick={() => modal.confirm({
                                 title: 'Delete the task',
                                 icon: <i className="fi fi-exclamation"></i>,
